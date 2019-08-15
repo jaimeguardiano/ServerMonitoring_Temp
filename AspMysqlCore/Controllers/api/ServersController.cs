@@ -35,20 +35,49 @@ namespace AspMysqlCore.Controllers.api
         
         // POST: api/Servers
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<IActionResult> Post(Servers server)
         {
+            if (ModelState.IsValid)
+            {
+                _db.Servers.Add(server);
+                await _db.SaveChangesAsync();
+                return BadRequest("Adding successful!");
+            }
+            return BadRequest("Please check data!");
         }
         
         // PUT: api/Servers/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task<IActionResult> Put(int id, Servers server)
         {
+            if(id != server.Id)
+            {
+                return BadRequest("Id not match!");
+            }
+            Servers serverInDB = await _db.Servers.SingleOrDefaultAsync(m => m.Id == id);
+            if (serverInDB == null)
+            {
+                return BadRequest("No records found!");
+            }
+            serverInDB.Name = server.Name;
+            serverInDB.ip_address = server.ip_address;
+            _db.Update(serverInDB);
+            await _db.SaveChangesAsync();
+            return BadRequest("Update successful!");
         }
         
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            Servers server = await _db.Servers.SingleOrDefaultAsync(m => m.Id == id);
+            if (server == null)
+            {
+                return BadRequest("Invalid ID!");
+            }
+            _db.Remove(server);
+            await _db.SaveChangesAsync();
+            return BadRequest("Server deleted successdfully!");
         }
     }
 }
