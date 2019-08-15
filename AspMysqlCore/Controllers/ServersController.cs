@@ -106,7 +106,7 @@ namespace AspMysqlCore.Controllers
         }
 
 
-
+        //TEST
 
         //GET: Servers/Delete/Id
         public async Task<IActionResult> Delete(int? Id)
