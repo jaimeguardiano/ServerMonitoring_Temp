@@ -68,16 +68,11 @@ namespace AspMysqlCore.Controllers.api
         
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public void Delete(int id)
         {
-            Servers server = await _db.Servers.SingleOrDefaultAsync(m => m.Id == id);
-            if (server == null)
-            {
-                return BadRequest("Invalid ID!");
-            }
+            Servers server =  _db.Servers.SingleOrDefault(m => m.Id == id);
             _db.Remove(server);
-            await _db.SaveChangesAsync();
-            return BadRequest("Server deleted successdfully!");
+            _db.SaveChanges();
         }
     }
 }
